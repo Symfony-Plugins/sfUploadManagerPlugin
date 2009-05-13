@@ -1,0 +1,45 @@
+sfUploadedFile:
+  tableName: sf_uploaded_file
+  actAs: [Timestampable]
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      autoincrement: true
+    temp_path:
+      type: string(255)
+    temp_name:
+      type: string(255)
+    original_name:
+      type: string(255)
+    mime_type:
+      type: string(50)
+    size:
+      type: integer(4)
+    upload_manager_security_id:
+      type: integer(4)
+  relations:
+    UploadManagerSecurity:
+      class: sfUploadManagerSecurity
+      foreign: id
+      local: upload_manager_security_id
+      type: one
+      onDelete: restrict
+      foreignAlias: UploadedFiles
+
+sfUploadManagerSecurity:
+  tableName: sf_upload_manager_security
+  actAs: [Timestampable]
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      autoincrement: true
+    ip:
+      type: string(255)
+      unique: true
+    upload_count:
+      type: integer(4)
+    blacklisted:
+      type: boolean
+      

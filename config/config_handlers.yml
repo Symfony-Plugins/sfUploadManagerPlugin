@@ -1,0 +1,3 @@
+config/sfUploadManagerPlugin.yml:
+  class: sfUploadManagerConfigHandler
+  file: %sf_plugins_dir%/sfUploadManagerPlugin/lib/config/sfUploadManagerConfigHandler.class.php

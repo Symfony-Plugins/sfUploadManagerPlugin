@@ -1,0 +1,11 @@
+field_name: file
+security:
+  mode: blacklist
+validator:
+  all:
+    options:  []
+    messages: []
+  images:
+    options:
+      mime_types: web_images
+    messages: []
