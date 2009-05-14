@@ -1,5 +1,6 @@
 field_name: file
 security:
+  enable: false
   mode: blacklist
 validator:
   all:

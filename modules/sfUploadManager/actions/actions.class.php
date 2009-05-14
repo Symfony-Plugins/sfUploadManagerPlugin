@@ -51,23 +51,27 @@ class sfUploadManagerActions extends sfActions
   
   protected function processUploadManagerSecurity()
   {
-    $this->uploadManagerSecurity = sfUploadManagerHelper::findUploadManagerSecurityOrCreate($this->getRequest()->getRemoteAddress());
-    
-    if ($this->uploadManagerSecurity->getBlackListed())
+    $this->uploadManagerSecurity = null;
+    if ($this->configManager->isSecurityEnable())
     {
-      // blacklisted ... reject request
-      throw new Exception('You are not authorized to do this action');
-    }
-    
-    if (
-      $this->configManager->isInWhiteListSecurityMode()
-      && $this->uploadManagerSecurity->isNew()
-    )
-    {
-      // not in white list ... reject request
-      throw new Exception('You are not authorized to do this action');
-    }
+      $this->uploadManagerSecurity = sfUploadManagerHelper::findUploadManagerSecurityOrCreate($this->getRequest()->getRemoteAddress());
+      
+      if ($this->uploadManagerSecurity->getBlackListed())
+      {
+        // blacklisted ... reject request
+        throw new Exception('You are not authorized to do this action');
+      }
+      
+      if (
+        $this->configManager->isInWhiteListSecurityMode()
+        && $this->uploadManagerSecurity->isNew()
+      )
+      {
+        // not in white list ... reject request
+        throw new Exception('You are not authorized to do this action');
+      }
 
-    $this->uploadManagerSecurity->incrementUploadCount();
+      $this->uploadManagerSecurity->incrementUploadCount();
+    }
   }
 }

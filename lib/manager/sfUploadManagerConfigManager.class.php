@@ -77,6 +77,16 @@ class sfUploadManagerConfigManager implements ArrayAccess
   {
     return $this->configuration['field_name'];
   }
+  
+  /**
+   * Returns true if security mode sets in whitelist, false otherwise
+   *
+   * @return boolean
+   */
+  public function isSecurityEnable()
+  {
+    return $this->configuration['security']['enable'];
+  }
 
   /**
    * Returns security mode
