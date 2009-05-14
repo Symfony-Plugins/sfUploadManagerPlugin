@@ -4,5 +4,12 @@
  */
 class PluginsfUploadedFileTable extends Doctrine_Table
 {
-
+  public function findObsoletes($seconds = 3600)
+  {
+    return Doctrine_Query::create()->
+      from('sfUploadedFile uf')->
+      where('uf.updated_at < ?')->
+      orderBy('uf.updated_at DESC')->
+      execute(array(date('Y-m-d h:i:s', time()-$seconds)));
+  }
 }
