@@ -1,3 +1,5 @@
+connection: <?php echo sfConfig::get('app_default_connection_name') ? sfConfig::get('app_default_connection') : 'doctrine' ?>
+
 sfUploadedFile:
   tableName: sf_uploaded_file
   actAs: [Timestampable]
