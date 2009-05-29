@@ -9,14 +9,14 @@
  */
 
 /**
- * sfUploadManagerClearTask
- * Remove obsolete uploaded files.
+ * sfUploadManagerResetTask
+ * Remove all uploaded file.
  *
  * @package    symfony
  * @subpackage sfUploadManagerPlugin
  * @author     François Béliveau  <francois.beliveau@my-labz.com>
  */
-class sfUploadManagerClearTask extends sfBaseTask
+class sfUploadManagerResetTask extends sfBaseTask
 {
   /**
    * Configures the task
@@ -26,13 +26,13 @@ class sfUploadManagerClearTask extends sfBaseTask
   protected function configure()
   {
     $this->namespace            = 'upload-manager';
-    $this->name                 = 'clear';
-    $this->briefDescription     = '"sfUploadManagerPlugin" clear the uploaded files: deletes all obsolete records';
+    $this->name                 = 'reset';
+    $this->briefDescription     = '"sfUploadManagerPlugin" reset uploaded files: deletes all records';
     $this->detailedDescription  = <<<EOF
-"sfUploadManagerPlugin" clear the uploaded files: deletes all obsolete records
+"sfUploadManagerPlugin" reset uploaded files: deletes all records
 
 Examples:
-  [./symfony upload-manager:clear frontend --env=cli --seconds=3600]
+  [./symfony upload-manager:reset frontend --env=cli]
 EOF;
 
     $this->addArguments(array(
@@ -41,7 +41,6 @@ EOF;
     
     $this->addOptions(array(
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_OPTIONAL, 'The environment', 'cli'),
-      new sfCommandOption('seconds', null, sfCommandOption::PARAMETER_OPTIONAL, 'Seconds after which a registration is considered as obsolete', '3600'),
     ));
   }
 
@@ -58,7 +57,7 @@ EOF;
     $configuration = ProjectConfiguration::getApplicationConfiguration($arguments['application'], $options['env'], true);
     sfContext::createInstance($configuration);
     
-    $uploadedFiles = Doctrine::getTable('sfUploadedFile')->findObsoletes($options['seconds']);
+    $uploadedFiles = Doctrine::getTable('sfUploadedFile')->findAll();
     $deleteCount   = 0;
     foreach ($uploadedFiles as $uploadedFile)
     {
@@ -66,6 +65,20 @@ EOF;
       $deleteCount++;
     }
 
+    $this->logSection('result', $deleteCount.' uploaded files deleted from database');
+    
+    $deleteCount = 0;
+    $finder      = sfFinder::type('file')->follow_link()->name('*');
+    foreach ($finder->in(sfUploadManagerHelper::getTempDir()) as $file)
+    {
+      if (!unlink($file))
+      {
+        throw new Exception('Unable to delete file "'.basename($file).'"');
+      }
+      
+      $deleteCount++;
+    }
+    
     $this->logSection('result', $deleteCount.' uploaded files deleted');
   }
 }
