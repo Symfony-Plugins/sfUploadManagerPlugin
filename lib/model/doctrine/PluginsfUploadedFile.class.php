@@ -7,7 +7,7 @@ abstract class PluginsfUploadedFile extends BasesfUploadedFile
 {
   public function getValidatedFile($validatedFileClassName)
   {
-    return new $validatedFileClassName($this->getOriginalName(), $this->getMimeType(), $this->getFullPath(), $this->getSize());
+    return new $validatedFileClassName($this->getOriginalName(), $this->getMimeType(), $this->getTempFile(), $this->getSize());
   }
 
   public function fromValidatedFile(sfvalidatedFile $validatedFile, $savePath)
@@ -44,12 +44,18 @@ abstract class PluginsfUploadedFile extends BasesfUploadedFile
   public function postDelete($event)
   {
     $tempFile = $this->getTempFile();
-    if (file_exists($tempFile) && is_file($tempFile))
+    if ($this->isFileExists())
     {
       if (!unlink($tempFile))
       {
         throw new Exception('Unable to remove file : "'.$tempFile.'"');
       }
     }
+  }
+  
+  public function isFileExists()
+  {
+    $tempFile = $this->getTempFile();
+    return (file_exists($tempFile) && is_file($tempFile));
   }
 }

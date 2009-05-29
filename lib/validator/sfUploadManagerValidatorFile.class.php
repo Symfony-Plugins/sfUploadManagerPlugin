@@ -73,7 +73,7 @@ class sfUploadManagerValidatorFile extends sfValidatorFile
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
 
-      if (!$uploadedFile->checkFileExists())
+      if (!$uploadedFile->isFileExists())
       {
         throw new sfValidatorError($this, 'no_tmp_file', array('value' => $value));
       }
