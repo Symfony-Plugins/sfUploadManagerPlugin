@@ -7,6 +7,7 @@ class sfUploadManagerActions extends sfActions
 {
   public function preExecute()
   {
+    $this->getContext()->getLogger()->debug('{sfUploadManager} received upload request');
     $this->configManager = sfUploadManagerHelper::getConfigManager($this->getContext());
   }
 
@@ -26,6 +27,7 @@ class sfUploadManagerActions extends sfActions
       $this->processUploadManagerSecurity($uploadedFile);
       $uploadedFile->setUploadManagerSecurity($this->uploadManagerSecurity);
       $uploadedFile->save();
+      $this->getContext()->getLogger()->debug('{sfUploadManager} file uploaded');
     }
     catch (Exception $e)
     {
