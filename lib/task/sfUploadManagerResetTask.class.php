@@ -57,6 +57,11 @@ EOF;
     $configuration = ProjectConfiguration::getApplicationConfiguration($arguments['application'], $options['env'], true);
     sfContext::createInstance($configuration);
     
+    if (!chmod(sfUploadManagerHelper::getTempDir(), 0777))
+    {
+      throw new Exception('Unable to set permission of directory '.sfUploadManagerHelper::getTempDir());
+    }
+    
     $uploadedFiles = Doctrine::getTable('sfUploadedFile')->findAll();
     $deleteCount   = 0;
     foreach ($uploadedFiles as $uploadedFile)
