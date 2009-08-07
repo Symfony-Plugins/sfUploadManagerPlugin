@@ -10,7 +10,7 @@ abstract class PluginsfUploadedFile extends BasesfUploadedFile
     return new $validatedFileClassName($this->getOriginalName(), $this->getMimeType(), $this->getTempFile(), $this->getSize());
   }
 
-  public function fromValidatedFile(sfvalidatedFile $validatedFile, $savePath)
+  public function fromValidatedFile(sfValidatedFile $validatedFile, $savePath)
   {
     $this->setSize($validatedFile->getSize());
     $this->setMimeType($validatedFile->getType());
