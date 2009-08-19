@@ -37,12 +37,16 @@ class PluginsfUploadManagerActions extends sfActions
       return $this->getResponseError($e->getMessage());
     }
 
-    echo $uploadedFile->isNew() ? null : $uploadedFile->getId();
-    return $this->getResponseContent();
+    return $this->getResponseContent($uploadedFile);
   }
 
-  protected function getResponseContent()
+  protected function getResponseContent($uploadedFile = null)
   {
+    if (!is_null($uploadedFile))
+    {
+      echo $uploadedFile->getId();
+    }
+
     throw new sfStopException();
     return sfView::NONE;
   }
